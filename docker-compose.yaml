@@ -1,0 +1,29 @@
+# REFERENCES:
+# https://dbafromthecold.com/2020/07/17/sql-server-and-docker-compose/
+
+version: '3.7'
+
+services:
+    mssql-srv-2019-ubuntu:
+        build: .
+        container_name: mssql-srv-2019-ubuntu
+        env_file:
+            - ./environments/mssql-srv-options.env
+            - ./environments/mssql-srv-password.env
+        ports:
+            - 1433:1433
+        volumes:
+            - mssql-srv-2019-ubuntu-data:/var/opt/mssql/data:rw
+            - mssql-srv-2019-ubuntu-log:/var/opt/mssql/log:rw
+            - mssql-srv-2019-ubuntu-dump:/var/opt/mssql/dump:rw
+        command: |
+            bash
+            -c "
+                echo "@RAISING"
+                /opt/mssql/bin/sqlservr
+            "
+
+volumes:
+    mssql-srv-2019-ubuntu-data: {}
+    mssql-srv-2019-ubuntu-log: {}
+    mssql-srv-2019-ubuntu-dump: {}
